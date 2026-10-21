@@ -1,0 +1,45 @@
+# Python
+venv/
+__pycache__/
+*.pyc
+.env
+
+# Node.js
+node_modules/
+.next/
+out/
+build/
+
+# IDE files
+.idea/
+.vscode/
+
+# System files
+.DS_Store
+
+
+# Environment secrets
+.env
+.env.*
+!.env.example
+**/.env
+**/.env.*
+
+# Python
+**/venv/
+**/.venv/
+**/__pycache__/
+*.py[cod]
+
+# Node / Next.js
+**/node_modules/
+**/.next/
+**/out/
+
+# Local vector database and generated data
+python-ml-backend/chroma_data/
+
+# Backup files
+*.bak
+# Logs
+*.log
