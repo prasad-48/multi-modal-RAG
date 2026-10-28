@@ -83,10 +83,12 @@ async def process_document_async(file_bytes: bytes, filename: str, collection_na
         logging.error(f"Error in async processing: {e}")
 
 
-@app.get("/")
+
+@app.api_route("/", methods=["GET", "HEAD"])
 def read_root():
     """A simple health check endpoint."""
     return {"status": "ok", "message": "Welcome to the RAG Multi-Modal API"}
+
 
 
 @app.post("/api/upload")
