@@ -1,0 +1,788 @@
+Multi-Modal RAG Chatbot
+Project Setup, Deployment & Technical Handover Guide
+
+Project: Multi-Modal RAG Chatbot
+Repository: https://github.com/prasad-48/multi-modal-RAG
+Backend: Python, FastAPI, Google Gemini and ChromaDB
+Frontend: Next.js, React and TypeScript
+Backend hosting: Render Web Service
+Frontend hosting: Render Static Site
+Availability monitoring: UptimeRobot
+Local development environment: Windows, PowerShell, Python and Node.js
+
+1. Project Overview
+
+Multi-Modal RAG is a full-stack application that allows users to upload documents and ask questions about their content using a Retrieval-Augmented Generation (RAG) pipeline.
+
+The backend processes documents, stores retrievable information in ChromaDB, and uses Google's Gemini model to generate responses. The frontend provides the chat interface and communicates with the backend API.
+
+Main features
+Upload supported documents, including PDFs.
+Extract document content for processing.
+Retrieve relevant information from stored document data.
+Generate answers using Google Gemini.
+Provide a browser-based chat interface.
+Run the backend and frontend locally.
+Deploy the backend and frontend independently.
+Monitor backend availability using UptimeRobot.
+
+Important: Image and diagram understanding depends on the multimodal extraction and retrieval functionality implemented in the application. It should be tested separately before claiming that all image-based document scenarios are supported.
+
+2. Important Project Links
+GitHub repository
+
+https://github.com/prasad-48/multi-modal-RAG
+
+This repository contains the project source code and is the source used for deployment.
+
+Production backend
+
+https://multi-modal-rag-lyr4.onrender.com/
+
+This is the deployed FastAPI backend.
+
+The root endpoint returns a JSON health response similar to:
+
+json
+{
+  "status": "ok",
+  "message": "Welcome to the RAG Multi-Modal API"
+}
+
+Backend API documentation
+
+https://multi-modal-rag-lyr4.onrender.com/docs
+
+Use this page to inspect API endpoints and test supported requests through Swagger UI.
+
+Backend OpenAPI specification
+
+https://multi-modal-rag-lyr4.onrender.com/openapi.json
+
+This endpoint exposes the generated OpenAPI schema when the service is available.
+
+Frontend production URL
+
+Open the Render Dashboard:
+
+https://dashboard.render.com/
+
+Select the deployed frontend Static Site and copy its assigned public URL. The exact frontend URL was not recorded in this handover.
+
+UptimeRobot
+
+https://uptimerobot.com/
+
+Use this service to monitor the backend endpoint and review availability incidents.
+
+Google AI Studio
+
+https://aistudio.google.com/apikey
+
+Use Google AI Studio to create or manage a Gemini API key. Never commit this key to GitHub or include it in public documentation.
+
+3. Project Architecture
+
+The project consists of two separately running applications.
+
+text
+User's Browser
+      |
+      v
+Next.js Frontend
+localhost:3000
+      |
+      | HTTP API requests
+      v
+FastAPI Backend
+localhost:8001
+      |
+      +---- Google Gemini API
+      |
+      +---- ChromaDB
+      |
+      +---- Document processing
+
+Frontend
+
+The frontend is responsible for the user interface, document-upload interaction, chat messages, and communication with the backend.
+
+Technology stack:
+
+Next.js 15
+React
+TypeScript
+Tailwind CSS and UI components
+
+Project directory:
+
+nextjs-app/
+
+Backend
+
+The backend handles API requests, document processing, retrieval, and response generation.
+
+Technology stack:
+
+Python 3.12
+FastAPI
+Uvicorn
+Google Generative AI SDK
+ChromaDB
+PyMuPDF and Pillow
+
+Project directory:
+
+python-ml-backend/
+
+Data storage
+
+ChromaDB provides local persistent vector storage in the development setup.
+
+Its local data directory is:
+
+python-ml-backend/chroma_data/
+
+This directory contains generated application data. It should generally not be committed to the public source repository.
+
+4. Prerequisites for Local Development
+
+Install the following software on the development machine:
+
+Git
+Python 3.12
+Node.js and npm
+Visual Studio Code or another code editor
+A Google Gemini API key
+
+Useful links:
+
+Git: https://git-scm.com/downloads
+Python: https://www.python.org/downloads/
+Node.js: https://nodejs.org/
+Visual Studio Code: https://code.visualstudio.com/
+Google AI Studio: https://aistudio.google.com/apikey
+
+The project was tested locally with Python 3.12.1. Using the same Python version is recommended for consistency.
+
+Verify installations in PowerShell:
+
+powershell
+git --version
+python --version
+node --version
+npm --version
+
+5. Clone the Project
+
+Open PowerShell and run:
+
+powershell
+git clone https://github.com/prasad-48/multi-modal-RAG.git
+
+cd multi-modal-RAG
+
+
+The project root should contain the following directories and files, subject to any changes made later:
+
+text
+multi-modal-RAG/
+├── nextjs-app/
+├── python-ml-backend/
+├── .gitignore
+├── .env
+└── README.md
+
+
+The .env file should be created locally when required. It must not be committed to GitHub.
+
+6. Configure the Backend Environment
+Step 1: Create the environment file
+
+Create a file named .env in the project root:
+
+multi-modal-RAG/.env
+
+Add the following configuration:
+
+env
+GOOGLE_API_KEY=YOUR_GOOGLE_API_KEY_HERE
+
+
+Replace the placeholder with a valid Gemini API key.
+
+Do not include quotation marks unless the configuration specifically requires them.
+
+Step 2: Protect the API key
+
+The .env file must remain private.
+
+Never paste the real key into GitHub.
+Never include the real key in a handover document.
+Do not share screenshots that expose the key.
+If a real key is exposed publicly, revoke it and create a replacement.
+Step 3: Install backend dependencies
+
+From the project root:
+
+powershell
+cd python-ml-backend
+
+python -m venv venv
+
+.\venv\Scripts\Activate.ps1
+
+python -m pip install -r requirements.txt
+
+
+If PowerShell blocks activation, use the virtual environment's Python executable directly for package installation and server startup.
+
+Step 4: Start the backend
+
+With the terminal inside python-ml-backend, run:
+
+powershell
+.\venv\Scripts\python -m uvicorn app.main:app --reload --host localhost --port 8001
+
+
+The expected message includes:
+
+text
+Uvicorn running on http://localhost:8001
+Application startup complete.
+
+
+Keep this terminal open while using the application.
+
+Backend local URLs
+API root: http://localhost:8001/
+Swagger documentation: http://localhost:8001/docs
+OpenAPI schema: http://localhost:8001/openapi.json
+7. Configure and Start the Frontend
+
+Open a second PowerShell terminal.
+
+Navigate to the frontend directory:
+
+powershell
+cd C:\Users\prata\Desktop\multi-modal-RAG\nextjs-app
+
+
+For a newly cloned project, use the actual location where the repository was cloned.
+
+Install dependencies:
+
+powershell
+npm install
+
+
+Start the development server:
+
+powershell
+npm run dev
+
+
+Expected output includes:
+
+text
+Local: http://localhost:3000
+Ready
+
+Frontend local URL
+
+http://localhost:3000
+
+Keep both terminals running:
+
+Terminal	Application	Port
+Terminal 1	FastAPI backend	8001
+Terminal 2	Next.js frontend	3000
+
+The local application is available at http://localhost:3000 only while the frontend development server is running.
+
+8. Frontend Environment Configuration
+
+The frontend uses the environment variable:
+
+NEXT_PUBLIC_PYTHON_API_URL
+
+For local development, configure it in the appropriate frontend environment file if required by the source code.
+
+For the deployed frontend, set it in the Render Static Site's environment settings.
+
+Production value:
+
+env
+NEXT_PUBLIC_PYTHON_API_URL=https://multi-modal-rag-lyr4.onrender.com
+
+
+Do not append /api unless the frontend source explicitly expects it. The existing configuration discussed during deployment uses the backend base URL.
+
+Because Next.js embeds NEXT_PUBLIC_ variables into client-side bundles during the build, configure the variable before deploying or rebuilding the frontend.
+
+If you change this value, trigger a new frontend deployment.
+
+Important: This variable is public by design. Never put private API keys or other secrets in NEXT_PUBLIC_ variables.
+
+9. Testing the Local Application
+
+Once both servers are running, perform the following checks.
+
+Test 1: Open the frontend
+
+Visit:
+
+http://localhost:3000
+
+Confirm that the chat interface appears.
+
+Test 2: Check the backend
+
+Open:
+
+http://localhost:8001/
+
+The backend should return its JSON health response.
+
+Test 3: Upload a document
+Open the frontend.
+Select a supported PDF.
+Wait for document processing to complete.
+Check the backend terminal for errors.
+Test 4: Ask a question
+
+Ask a question whose answer is clearly present in the document.
+
+For example:
+
+Summarize this document in three bullet points.
+
+Compare the response with the source document.
+
+Test 5: Check grounding
+
+Ask a question about a detail not contained in the uploaded document.
+
+Verify whether the application appropriately handles missing information rather than confidently inventing an answer.
+
+Test 6: Inspect logs
+
+If an operation fails, inspect both the frontend and backend terminals.
+
+A successful Gemini API call alone does not prove that document upload, retrieval, and response generation are all working correctly.
+
+10. Backend Deployment on Render
+
+The backend is deployed as a Render Web Service.
+
+Production URL
+
+https://multi-modal-rag-lyr4.onrender.com/
+
+Render Dashboard
+
+https://dashboard.render.com/
+
+Select the backend service named for the Multi-Modal RAG application.
+
+Backend configuration
+Setting	Value
+Service type	Web Service
+Root Directory	python-ml-backend
+Python version	3.12.1
+Build Command	pip install -r requirements.txt
+Start Command	uvicorn app.main:app --host 0.0.0.0 --port $PORT
+Environment variables
+
+Configure these in the backend service's Environment settings:
+
+Key	Value
+PYTHON_VERSION	3.12.1
+GOOGLE_API_KEY	Your private Gemini API key
+
+The API key must be entered directly into Render's environment settings, not committed to the repository.
+
+Deploying a new backend version
+Commit and push the required code changes to the connected GitHub branch.
+Open the Render Dashboard.
+Select the backend Web Service.
+Open its deployment history.
+Wait for the automatic deployment or use Manual Deploy → Deploy latest commit.
+Wait until the deployment reports Live.
+Check the deployment logs for startup errors.
+Test the production endpoints.
+
+Render documentation:
+
+https://render.com/docs
+
+Python version documentation:
+
+https://render.com/docs/python-version
+
+11. Frontend Deployment on Render
+
+The frontend is deployed as a Render Static Site.
+
+Render Dashboard
+
+https://dashboard.render.com/
+
+Select the deployed frontend Static Site to view its URL and configuration.
+
+Frontend configuration
+Setting	Value
+Service type	Static Site
+Repository	prasad-48/multi-modal-RAG
+Root Directory	nextjs-app
+Build Command	npm install && npm run build
+Publish Directory	out
+
+The project successfully built and exported its static pages using this configuration during the deployment described in the conversation.
+
+Frontend environment variable
+
+Configure this before the build:
+
+Key	Value
+NEXT_PUBLIC_PYTHON_API_URL	https://multi-modal-rag-lyr4.onrender.com
+Verify the deployment
+
+After deployment:
+
+Open the frontend URL provided by Render.
+Confirm that the interface loads.
+Upload a supported document.
+Ask a question about it.
+Check the browser console and backend logs if anything fails.
+
+A successful static-site build does not, by itself, prove that production API requests and file uploads work.
+
+Important static export consideration
+
+The current deployment uses the out directory as the static publish directory. Any frontend functionality that requires a Next.js server-side runtime must be supported separately or implemented through the FastAPI backend.
+
+Do not assume that a feature works in production merely because the static export succeeds.
+
+Render documentation:
+
+https://render.com/docs/static-sites
+
+12. UptimeRobot Monitoring
+
+UptimeRobot is configured to monitor the deployed backend.
+
+Website:
+
+https://uptimerobot.com/
+
+Monitored endpoint
+
+https://multi-modal-rag-lyr4.onrender.com/
+
+Current monitoring configuration
+Monitor type: HTTP(s)
+Endpoint: Backend root URL
+Monitoring interval: 5 minutes
+Reported status: Up
+Why the HEAD request mattered
+
+During setup, a health monitor encountered an HTTP 405 Method Not Allowed response when sending a HEAD request.
+
+The backend root endpoint originally used:
+
+python
+@app.get("/")
+
+
+The route was updated to accept both GET and HEAD:
+
+python
+@app.api_route("/", methods=["GET", "HEAD"])
+def read_root():
+    """A simple health check endpoint."""
+    return {
+        "status": "ok",
+        "message": "Welcome to the RAG Multi-Modal API"
+    }
+
+
+This change was committed and deployed. The live endpoint subsequently returned HTTP 200 for both HEAD and GET requests, and UptimeRobot showed Up.
+
+Manual health checks in PowerShell
+
+Test HEAD:
+
+powershell
+Invoke-WebRequest `
+  -Uri "https://multi-modal-rag-lyr4.onrender.com/" `
+  -Method HEAD `
+  -TimeoutSec 60
+
+
+Test GET:
+
+powershell
+Invoke-RestMethod `
+  -Uri "https://multi-modal-rag-lyr4.onrender.com/" `
+  -Method GET
+
+
+Expected results:
+
+HEAD: HTTP 200
+GET: JSON response containing status: ok
+
+UptimeRobot verifies endpoint availability. It does not verify that PDF processing, Gemini generation, or document retrieval is working.
+
+Free hosting limitation
+
+Free Render web services may spin down after a period without inbound traffic. A subsequent request may experience a cold start.
+
+An Up status in UptimeRobot does not guarantee that the application is permanently awake or that every application feature works.
+
+13. Full Project Health Checks
+
+Run these commands from the project root or the appropriate application directory.
+
+Backend syntax check
+powershell
+cd python-ml-backend
+
+.\venv\Scripts\python -m compileall app
+
+
+This checks Python files for syntax errors.
+
+Backend dependency check
+powershell
+.\venv\Scripts\python -m pip check
+
+
+This checks for incompatible or missing installed package requirements.
+
+Frontend production build
+
+Open a separate terminal:
+
+powershell
+cd nextjs-app
+
+npm run build
+
+
+A successful build verifies that Next.js can compile and validate the frontend for production under the current configuration.
+
+Backend HTTP test
+
+With the backend running:
+
+powershell
+Invoke-RestMethod -Uri "http://localhost:8001/" -Method GET
+
+
+For the HEAD request:
+
+powershell
+Invoke-WebRequest -Uri "http://localhost:8001/" -Method HEAD
+
+Complete end-to-end test
+
+The final check is to upload a document through the actual frontend and ask questions about its contents.
+
+This is necessary because syntax checks and build checks do not test the entire RAG pipeline.
+
+14. Troubleshooting Reference
+Problem: PDF upload fails
+
+Check:
+
+Whether the backend is running.
+Whether the frontend uses the correct API base URL.
+Whether the browser's Network tab shows a failed request.
+Whether the backend terminal reports an HTTP error or Python traceback.
+Whether the uploaded file exceeds a configured request-size limit.
+
+During local development, an earlier error showed:
+
+POST /undefined/api/upload
+
+This indicated that the frontend was constructing the request URL using an undefined value.
+
+The frontend also reported a Next.js 1 MB Server Actions body-size limit. If this issue reappears, inspect the upload implementation and the actual failing request before changing size limits.
+
+Problem: Gemini response generation fails
+
+Verify that:
+
+GOOGLE_API_KEY is present in the backend environment.
+The key is valid and has the required access.
+The configured Gemini model is available.
+The backend logs show the actual exception.
+ChromaDB retrieval returns relevant content.
+
+The standalone Gemini test used during troubleshooting returned OK, confirming that a basic Gemini generation request worked with the corrected configuration at that time.
+
+The application can still fail at later retrieval or response-generation stages.
+
+Problem: Frontend cannot connect to the production backend
+
+Check:
+
+NEXT_PUBLIC_PYTHON_API_URL in Render.
+Whether the frontend was rebuilt after the variable changed.
+The browser's Network tab.
+The requested API URL and response status.
+The backend deployment logs.
+Problem: Render cannot find requirements.txt
+
+Confirm that the backend service uses:
+
+python-ml-backend
+
+as its Root Directory.
+
+The correct backend build command is:
+
+text
+pip install -r requirements.txt
+
+
+The correct start command is:
+
+text
+uvicorn app.main:app --host 0.0.0.0 --port $PORT
+
+Problem: UptimeRobot reports HTTP 405
+
+Test the deployed endpoint with both HEAD and GET. Confirm that the latest deployed code accepts both methods and that the Render deployment is Live.
+
+Problem: ChromaDB telemetry warning
+
+A telemetry message appeared in the logs:
+
+Failed to send telemetry event ClientStartEvent
+
+The application nevertheless started successfully in the observed local and production sessions. Treat this as a separate telemetry issue unless further logs show that it affects application functionality.
+
+Problem: Frontend production build fails with a TypeScript ref error
+
+A previous build encountered a mismatch between:
+
+RefObject<HTMLDivElement | null>
+
+and:
+
+RefObject<HTMLDivElement>
+
+The prop declaration and the ref created with useRef need compatible types. Run npm run build after any related code change to confirm the fix.
+
+15. Security and Repository Maintenance
+
+Before publishing or updating the repository, verify the following.
+
+Secrets
+Keep .env and .env.local out of Git.
+Keep the Gemini API key private.
+Use Render environment settings for production secrets.
+Never place secrets in public frontend variables.
+Generated files
+
+The following should generally not be committed:
+
+Python virtual environments.
+Node.js node_modules.
+Next.js build output and caches.
+Local ChromaDB database files.
+Temporary backups such as *.bak.
+Local credentials and private configuration files.
+
+Ensure that .gitignore covers these items.
+
+A .gitignore rule does not automatically remove files that are already tracked. Check the Git index when removing previously committed generated data.
+
+Licensing and attribution
+
+The project was originally obtained from another repository before being configured and modified locally.
+
+Before removing inherited notices or publishing the repository as an independent project, verify the original license and any applicable attribution requirements. Keep notices that the applicable license requires.
+
+Document your actual implementation, changes, and contributions accurately.
+
+16. Known Project History
+
+The following issues were encountered and addressed during setup.
+
+Issue	Resolution
+Incorrect Gemini API key	Replaced with a working key
+Frontend upload URL contained undefined	Identified missing frontend API URL configuration
+Next.js upload request exceeded 1 MB	Identified the request-size error for further diagnosis
+Generic Gemini response-generation error	Enabled full exception logging for diagnosis
+Render could not find requirements.txt	Corrected backend Root Directory
+Render initially selected Python 3.14.8	Set PYTHON_VERSION=3.12.1
+Backend health check returned 405 for HEAD	Updated root route to accept GET and HEAD
+UptimeRobot monitor showed Down	Deployed the health-check fix; subsequent status was Up
+Local frontend production build had a TypeScript ref error	Identified the ref type mismatch for correction and verification
+
+This history is useful when troubleshooting the same issues on a new machine or deployment.
+
+17. Quick Reference
+Local development
+
+Backend terminal:
+
+powershell
+cd python-ml-backend
+.\venv\Scripts\python -m uvicorn app.main:app --reload --host localhost --port 8001
+
+
+Frontend terminal:
+
+powershell
+cd nextjs-app
+npm run dev
+
+Local URLs
+Purpose	URL
+Frontend	http://localhost:3000
+Backend	http://localhost:8001/
+Swagger docs	http://localhost:8001/docs
+OpenAPI schema	http://localhost:8001/openapi.json
+Production URLs
+Purpose	URL
+GitHub repository	https://github.com/prasad-48/multi-modal-RAG
+Render backend	https://multi-modal-rag-lyr4.onrender.com/
+Production API docs	https://multi-modal-rag-lyr4.onrender.com/docs
+Production OpenAPI schema	https://multi-modal-rag-lyr4.onrender.com/openapi.json
+Render Dashboard	https://dashboard.render.com/
+UptimeRobot	https://uptimerobot.com/
+Google AI Studio	https://aistudio.google.com/apikey
+
+The frontend's public URL should be copied from the Render Static Site dashboard.
+
+18. Final Handover Checklist
+
+Before handing the project to another developer, confirm:
+
+The GitHub repository is accessible to the intended recipient.
+Required license and attribution notices are preserved.
+The recipient has installed Python, Node.js, npm, and Git.
+The backend .env file is configured locally.
+The Gemini API key is valid and private.
+Backend dependencies install successfully.
+Frontend dependencies install successfully.
+The backend starts on port 8001.
+The frontend starts on port 3000.
+The frontend API URL points to the correct backend.
+A supported PDF uploads successfully.
+A document-specific question returns a relevant answer.
+Production environment variables are configured in Render.
+The latest backend and frontend deployments are Live.
+The production HEAD and GET health checks return HTTP 200.
+UptimeRobot reports Up.
+Generated data and private configuration are excluded from source control.
+Final Note
+
+The backend and frontend deployments were both reported as successful, and the deployed backend health endpoint was verified with successful HEAD and GET requests. UptimeRobot subsequently showed the backend as Up.
+
+These checks establish that the deployed services are reachable. The complete production workflow—including document upload, retrieval, and Gemini response generation—should still be tested periodically to ensure that all features continue to work as expected.
